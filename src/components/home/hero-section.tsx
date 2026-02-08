@@ -39,7 +39,7 @@ export default function HeroSection() {
     const {setApi, autoplay, prev, next} = useCarousel({delay: 3000});
 
     return (
-        <section className="relative w-full min-h-screen overflow-hidden">
+        <section className="relative w-full min-h-screen ">
             <div className="absolute inset-0 z-0">
                 <Image
                     src="/hero.jpg"
@@ -49,12 +49,12 @@ export default function HeroSection() {
                     priority
                     quality={90}
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"/>
+                <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/50 to-transparent"/>
             </div>
 
             <div className="relative z-10 min-h-screen flex items-center">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                    <div className="flex flex-col sm:flex-row justify-center lg:justify-between gap-10 items-center">
 
                         <div className="flex flex-col justify-center space-y-6 max-w-2xl">
                             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
@@ -80,14 +80,15 @@ export default function HeroSection() {
                             <Carousel
                                 setApi={setApi}
                                 plugins={[autoplay.current]}
-                                opts={{align: 'center', loop: true}}
+                                opts={{align: 'start', loop: true}}
                                 className="w-full "
                             >
                                 <CarouselContent className="-ml-6 ">
                                     {destinations.map((destination, index) => (
                                         <CarouselItem
                                             key={index}
-                                            className={cn('pl-6 basis-[75%] sm:basis-[55%] lg:basis-[45%] xl:basis-[35%] h-[500px]')}
+                                            className={cn('pl-6 basis-1/3 h-72  aspect-square  overflow-hidden shadow-2xl',
+                                            index === 0 ? 'basis-[75%] sm:basis-[55%] lg:basis-[45%] xl:basis-[35%]' : '')}
                                         >
                                             <div className="group relative transition-all duration-500 hover:scale-105">
 
@@ -96,7 +97,7 @@ export default function HeroSection() {
                                                 </h3>
 
                                                 <div
-                                                    className="relative min-h-[500px] aspect-square rounded-3xl overflow-hidden shadow-2xl">
+                                                    className="relative h-72  w-full aspect-square  overflow-hidden shadow-2xl">
                                                     <Image
                                                         src={destination.image}
                                                         alt={destination.title}
@@ -112,7 +113,7 @@ export default function HeroSection() {
                                     ))}
                                 </CarouselContent>
 
-                                <div className="absolute  left-1/2 -translate-x-1/2 flex gap-4">
+                                <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 flex gap-4">
                                     <button
                                         onClick={prev}
                                         className="h-10 w-10 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white hover:bg-black/60 transition-all flex items-center justify-center shadow-lg"
