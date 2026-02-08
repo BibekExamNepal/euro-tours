@@ -29,12 +29,12 @@ export const metadata: Metadata = {
     ],
     authors: [{ name: "Euro Travels" }],
     creator: "Euro Travels",
-    metadataBase: new URL("https://eurotravels.com"),
+    metadataBase: new URL("https://euro-tours.vercel.app/"),
     openGraph: {
         title: "Euro Travels | Discover Culture, Nature & Adventure",
         description:
             "Explore authentic travel experiences with Euro Travels — from Himalayan journeys to cultural city tours.",
-        url: "https://eurotravels.com",
+        url: "https://euro-tours.vercel.app/",
         siteName: "Euro Travels",
         images: [
             {
@@ -64,7 +64,7 @@ export default function RootLayout({
                                        children,
                                    }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning className={'scroll-smooth'}>
         <body className={`${manrope.variable} font-sans antialiased`}>
         <RootLayoutProvider>{children}</RootLayoutProvider>
         </body>
