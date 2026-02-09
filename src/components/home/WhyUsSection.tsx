@@ -53,7 +53,7 @@ export default function WhyUsSection() {
         >
             <div className="absolute inset-0 z-0">
                 <Image
-                    src="/why-us-bg.jpg"
+                    src="/why-us-bg.png"
                     alt=""
                     fill
                     className="object-cover"

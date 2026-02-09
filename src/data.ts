@@ -1,8 +1,8 @@
 export const navItems = [
-    { label: 'Home', href: '/' },
+    { label: 'Home', href: '#home' },
     {
         label: 'Destinations',
-        href: '/destinations',
+        href: '#destinations',
         children: [
             {
                 group: 'TOP DESTINATIONS',
@@ -10,12 +10,12 @@ export const navItems = [
                     {
                         label: 'All Destinations',
                         description: 'Handpicked destinations featuring mountains, cities, nature, and culture.',
-                        href: '/destinations',
+                        href: '#all-destinations',
                     },
                     {
                         label: 'International Tours',
                         description: 'Carefully planned international holiday packages and tours.',
-                        href: '/destinations/international',
+                        href: '#international-tours',
                     },
                 ],
             },
@@ -25,18 +25,18 @@ export const navItems = [
                     {
                         label: 'City Tours',
                         description: 'Guided tours through historic cities, markets, temples, and landmarks.',
-                        href: '/destinations/city-tours',
+                        href: '#city-tours',
                     },
                     {
                         label: 'Mountain Tours',
                         description: 'Scenic mountain regions, hill stations, and Himalayan viewpoints.',
-                        href: '/destinations/mountain-tours',
+                        href: '#mountain-tours',
                     },
                 ],
             },
         ],
     },
-    { label: 'Services', href: '/services' },
-    { label: 'Contact', href: '/contact' },
-    { label: 'About Us', href: '/about' },
+    { label: 'Services', href: '#services' },
+    { label: 'Contact', href: '#contact' },
+    { label: 'About Us', href: '#about' },
 ];

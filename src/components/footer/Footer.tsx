@@ -4,9 +4,14 @@ import React from 'react';
 import Link from 'next/link';
 import {Facebook, Instagram, Mail, MapPin, Phone, Twitter, Youtube} from 'lucide-react';
 import Image from 'next/image';
-import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
-import {cn} from "@/lib/utils";
+import {subscriberSchema, SubscriberValues} from "@/lib/validations/subscriber.schema";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import service from "@/service/contact.service";
+import {showToast} from "@/lib/show-toast";
+import TextInputField from "@/components/field/text-input";
+import {Spinner} from "@/components/ui/spinner";
 
 const SocialIcon = ({
                         Icon,
@@ -92,6 +97,30 @@ export default function Footer() {
         {label: 'Privacy Policy', href: '/privacy-policy'},
         {label: 'Terms of Service', href: '/terms-of-service'},
     ];
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: {errors, isSubmitting},
+    } = useForm<SubscriberValues>({
+        resolver: zodResolver(subscriberSchema),
+    });
+
+    const onSubmit = async (data: SubscriberValues) => {
+        await service.subscribeUser(data.email).then((res) => {
+            showToast({
+                type: "success",
+                message: res?.message || "Successfully subscribed!"
+            })
+            reset();
+        }).catch((err) => {
+            showToast({
+                type: "error",
+                message: err?.message || "Failed to subscribe!"
+            })
+        })
+    };
+
 
     return (
         <footer
@@ -126,19 +155,26 @@ export default function Footer() {
 
                         <div className="flex flex-col gap-4">
                             <p className=" text-sm font-medium text-main-color">Need any help? Please let us know</p>
-                            <form className="flex flex-col sm:flex-row gap-2" onSubmit={(e) => e.preventDefault()}>
-                                <Input
-                                    type="email"
-                                    placeholder="Your email..."
-                                    className={cn('flex-1 px-4 py-2.5 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 min-w-0 border border-gray-200 dark:border-slate-700',
-                                        'placeholder:text-main-color max-w-full min-w-xs')}
-                                    aria-label="Email subscription"
-                                />
+                            <form  className="flex flex-col sm:flex-row sm:items-start gap-2 w-full"
+                                  onSubmit={handleSubmit(onSubmit)}>
+                                <div className="flex-1 w-full min-w-xs">
+                                    <TextInputField
+                                        type="email"
+                                        placeholder="Your email..."
+                                        {...register("email")}
+                                        className="w-full text-black"
+                                        error={errors.email?.message}
+                                    />
+                                </div>
+
                                 <Button
                                     type="submit"
-                                    className="  w-fit bg-purple-600 hover:bg-purple-700 rounded-lg text-white font-medium text-sm transition-colors duration-200 whitespace-nowrap"
+                                    disabled={isSubmitting}
+                                    className=" w-fit bg-purple-600 hover:bg-purple-700 rounded-lg text-white font-medium text-sm transition-colors duration-200 whitespace-nowrap"
                                 >
-                                    Tell me more
+                                    {isSubmitting ? <p>
+                                        <Spinner/> Subscribing...
+                                    </p> : "Subscribe"}
                                 </Button>
                             </form>
                         </div>

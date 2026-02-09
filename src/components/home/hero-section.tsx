@@ -46,7 +46,7 @@ function HeroSection() {
 
     return (
         <section
-            className="relative w-full min-h-screen"
+            className="relative w-full sm:min-h-screen"
             aria-label="Hero section featuring Annapurna Base Camp"
         >
             <div className="absolute inset-0 z-0" aria-hidden="true">
@@ -90,8 +90,9 @@ function HeroSection() {
                             </div>
                         </div>
 
-                        <div className="relative w-full lg:w-auto lg:pl-8 lg:-mr-20 max-w-3xl">
-                            <Carousel
+                        <div className="relative w-full lg:w-[60%] lg:pl-8 lg:-mr-20 max-w-none">
+
+                        <Carousel
                                 setApi={setApi}
                                 plugins={[autoplay.current]}
                                 opts={{ align: 'start', loop: true }}
@@ -102,18 +103,17 @@ function HeroSection() {
                                     {destinations.map((destination, index) => (
                                         <CarouselItem
                                             key={`${destination.title}-${index}`}
-                                            className={cn(
-                                                'pl-4 sm:pl-6 basis-full sm:basis-1/2 md:basis-1/3',
-                                                index === 0 ? 'basis-[85%] xs:basis-[75%] sm:basis-[55%] lg:basis-[45%] xl:basis-[35%]' : 'basis-[60%] xs:basis-1/2 sm:basis-1/3'
-                                            )}
+                                            className="pl-4 sm:pl-6 basis-[85%] sm:basis-[60%] lg:basis-[45%]"
+
+
                                         >
                                             <article className="group relative transition-all duration-500 hover:scale-105 focus-within:scale-105">
                                                 <h3 className="text-white text-sm sm:text-base font-semibold mb-2 sm:mb-3 pl-2 drop-shadow-lg text-center">
                                                     {destination.title}
                                                 </h3>
 
-                                                <div className="relative h-56 sm:h-64 md:h-72 w-full overflow-hidden rounded-lg shadow-2xl">
-                                                    <Image
+                                                <div className="relative h-64 sm:h-72 md:h-80 lg:h-96 w-full overflow-hidden rounded-lg shadow-2xl">
+                                                <Image
                                                         src={destination.image}
                                                         alt={destination.alt || destination.title}
                                                         fill
@@ -130,7 +130,7 @@ function HeroSection() {
                                 </CarouselContent>
 
                                 <div
-                                    className="absolute -bottom-10 sm:-bottom-12 left-1/2 -translate-x-1/2 flex gap-3 sm:gap-4"
+                                    className="absolute -bottom-14 sm:-bottom-12 left-1/2 -translate-x-1/2 flex gap-3 sm:gap-4"
                                     role="group"
                                     aria-label="Carousel navigation"
                                 >

@@ -1,22 +1,30 @@
 import HttpService from "@/service/http.service";
-import {ContactFormValues} from "@/lib/validations/contact.schema";
+import { ContactFormValues } from "@/lib/validations/contact.schema";
 
-class ContactService extends HttpService {
+class Service extends HttpService {
 
     async sendContactMessage(data: ContactFormValues) {
         try {
             return await this.postRequest({
-                url: '/contact',
-                data
-            })
+                url: "/contact",
+                data,
+            });
         } catch (error: any) {
-            throw error
+            throw error;
         }
-
     }
 
+    async subscribeUser(email: string) {
+        try {
+            return await this.postRequest({
+                url: "/subscriber",
+                data: { email },
+            });
+        } catch (error: any) {
+            throw error;
+        }
+    }
 }
 
-const contactService = new ContactService()
-export default contactService
-
+const service = new Service();
+export default service;

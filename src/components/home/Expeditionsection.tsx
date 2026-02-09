@@ -110,7 +110,7 @@ export default function ExpeditionTreks() {
                     </p>
                 </div>
 
-                <div className="relative">
+                <div className="relative mt-20 sm:mt-12">
                     <div className="absolute -top-16 sm:-top-20 right-0 md:right-4 flex gap-3 z-20">
                         <button
                             onClick={prev}
