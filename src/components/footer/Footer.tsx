@@ -170,12 +170,17 @@ export default function Footer() {
                                 <Button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className=" w-fit bg-purple-600 hover:bg-purple-700 rounded-lg text-white font-medium text-sm transition-colors duration-200 whitespace-nowrap"
+                                    className="w-fit bg-purple-600 hover:bg-purple-700 rounded-lg text-white font-medium text-sm transition-colors duration-200 whitespace-nowrap"
                                 >
-                                    {isSubmitting ? <p>
-                                        <Spinner/> Subscribing...
-                                    </p> : "Subscribe"}
+                                    {isSubmitting ? (
+                                        <span className="inline-flex items-center gap-2">
+            <Spinner /> Subscribing...
+        </span>
+                                    ) : (
+                                        "Subscribe"
+                                    )}
                                 </Button>
+
                             </form>
                         </div>
                     </div>

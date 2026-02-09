@@ -1,11 +1,20 @@
 'use client';
 
-import React, {useState} from 'react';
-import {ChevronDown, Star} from 'lucide-react';
-import {Button} from '@/components/ui/button';
-import {Textarea} from '@/components/ui/textarea';
-import {Collapsible, CollapsibleContent, CollapsibleTrigger,} from '@/components/ui/collapsible';
+import React, { useState } from 'react';
+import { ChevronDown, Star, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import Image from 'next/image';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { reviewSchema, ReviewFormData } from '@/lib/validations/review.schema';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import {showToast} from "@/lib/show-toast";
 
 interface FAQItem {
     question: string;
@@ -15,40 +24,76 @@ interface FAQItem {
 const faqData: FAQItem[] = [
     {
         question: 'What destinations do you cover in Nepal?',
-        answer: 'We cover all major destinations including Kathmandu, Pokhara, Chitwan, Lumbini, Everest Region, Annapurna Region, Mustang, Langtang, and many off-the-beaten-path locations across Nepal.',
+        answer:
+            'We cover all major destinations including Kathmandu, Pokhara, Chitwan, Lumbini, Everest Region, Annapurna Region, Mustang, Langtang, and many off-the-beaten-path locations across Nepal.',
     },
     {
         question: 'Do you arrange trekking and hiking tours?',
-        answer: 'Yes, we arrange comprehensive trekking and hiking tours across Nepal, including popular routes like Everest Base Camp, Annapurna Circuit, and many others.',
+        answer:
+            'Yes, we arrange comprehensive trekking and hiking tours across Nepal, including popular routes like Everest Base Camp, Annapurna Circuit, and many others.',
     },
     {
         question: 'Are your guides licensed and experienced?',
-        answer: 'All our guides are fully licensed by the Nepal Tourism Board and have years of experience leading tours and treks in the Himalayas.',
+        answer:
+            'All our guides are fully licensed by the Nepal Tourism Board and have years of experience leading tours and treks in the Himalayas.',
     },
     {
         question: 'What is included in your tour packages?',
-        answer: 'Our tour packages typically include accommodation, meals, transportation, permits, guide services, and all necessary arrangements for your journey.',
+        answer:
+            'Our tour packages typically include accommodation, meals, transportation, permits, guide services, and all necessary arrangements for your journey.',
     },
 ];
 
 export default function FAQSection() {
     const [openItems, setOpenItems] = useState<number[]>([0]);
-    const [rating, setRating] = useState<number>(0);
     const [hoverRating, setHoverRating] = useState<number>(0);
-    const [review, setReview] = useState<string>('');
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        reset,
+        watch,
+        setValue,
+    } = useForm<ReviewFormData>({
+        resolver: zodResolver(reviewSchema),
+        defaultValues: {
+            rating: 0,
+            review: '',
+        },
+    });
+
+    const rating = watch('rating');
 
     const toggleItem = (index: number) => {
         setOpenItems((prev) =>
-            prev.includes(index)
-                ? prev.filter((i) => i !== index)
-                : [...prev, index]
+            prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
         );
     };
 
-    const handleSubmitReview = () => {
-        console.log({rating, review});
-        setRating(0);
-        setReview('');
+    const onSubmit = async (data: ReviewFormData) => {
+        setIsSubmitting(true);
+
+        try {
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+
+            console.log('Review submitted:', data);
+            showToast({
+                type: 'success',
+                message: 'Thank you for your review!',
+                title: 'Review Submitted',
+            });
+            reset();
+        } catch (error) {
+            showToast({
+                type: 'error',
+                message: 'Failed to submit review. Please try again.',
+            });
+            console.error('Error submitting review:', error);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -84,9 +129,9 @@ export default function FAQSection() {
                                     aria-expanded={openItems.includes(index)}
                                     aria-controls={`faq-answer-${index}`}
                                 >
-                                    <span className="text-sm sm:text-base font-semibold text-gray-900 dark:text-gray-50 pr-4">
-                                        {faq.question}
-                                    </span>
+                  <span className="text-sm sm:text-base font-semibold text-gray-900 dark:text-gray-50 pr-4">
+                    {faq.question}
+                  </span>
                                     <div
                                         className={`flex-shrink-0 w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all duration-300 ${
                                             openItems.includes(index)
@@ -131,60 +176,99 @@ export default function FAQSection() {
                                 Loved our work? Leave us a review
                             </h3>
                             <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-5 sm:mb-6 leading-relaxed">
-                                Your feedback means a lot to us. If you enjoyed working with us, take a moment to share
-                                your experience and help others discover our services.
+                                Your feedback means a lot to us. If you enjoyed working with us,
+                                take a moment to share your experience and help others discover
+                                our services.
                             </p>
 
-                            <fieldset className="mb-5 sm:mb-6">
-                                <legend className="sr-only">Rate your experience</legend>
-                                <div
-                                    className="flex gap-1 sm:gap-2"
-                                    role="radiogroup"
-                                    aria-label="Rating"
-                                    aria-required="false"
-                                >
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                        <button
-                                            key={star}
-                                            type="button"
-                                            role="radio"
-                                            aria-checked={rating === star}
-                                            aria-label={`${star} star${star !== 1 ? 's' : ''}`}
-                                            onClick={() => setRating(star)}
-                                            onMouseEnter={() => setHoverRating(star)}
-                                            onMouseLeave={() => setHoverRating(0)}
-                                            className="transition-transform hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8fbc3f] dark:focus-visible:ring-[#a8d955] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 rounded"
+                            <form onSubmit={handleSubmit(onSubmit)}>
+                                <fieldset className="mb-5 sm:mb-6" disabled={isSubmitting}>
+                                    <legend className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">
+                                        Rate your experience
+                                    </legend>
+                                    <div
+                                        className="flex gap-1 sm:gap-2"
+                                        role="radiogroup"
+                                        aria-label="Rating"
+                                        aria-required="true"
+                                    >
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <button
+                                                key={star}
+                                                type="button"
+                                                role="radio"
+                                                aria-checked={rating === star}
+                                                aria-label={`${star} star${star !== 1 ? 's' : ''}`}
+                                                onClick={() => setValue('rating', star)}
+                                                onMouseEnter={() => setHoverRating(star)}
+                                                onMouseLeave={() => setHoverRating(0)}
+                                                disabled={isSubmitting}
+                                                className="transition-transform hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8fbc3f] dark:focus-visible:ring-[#a8d955] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                                            >
+                                                <Star
+                                                    className={`h-7 w-7 sm:h-8 sm:w-8 transition-colors ${
+                                                        star <= (hoverRating || rating)
+                                                            ? 'fill-yellow-400 text-yellow-400 dark:fill-yellow-300 dark:text-yellow-300'
+                                                            : 'fill-gray-200 text-gray-200 dark:fill-gray-600 dark:text-gray-600'
+                                                    }`}
+                                                    aria-hidden="true"
+                                                />
+                                            </button>
+                                        ))}
+                                    </div>
+                                    {errors.rating && (
+                                        <p
+                                            className="text-xs text-red-600 dark:text-red-400 mt-2"
+                                            role="alert"
                                         >
-                                            <Star
-                                                className={`h-7 w-7 sm:h-8 sm:w-8 transition-colors ${
-                                                    star <= (hoverRating || rating)
-                                                        ? 'fill-yellow-400 text-yellow-400 dark:fill-yellow-300 dark:text-yellow-300'
-                                                        : 'fill-gray-200 text-gray-200 dark:fill-gray-600 dark:text-gray-600'
-                                                }`}
-                                                aria-hidden="true"
-                                            />
-                                        </button>
-                                    ))}
+                                            {errors.rating.message}
+                                        </p>
+                                    )}
+                                </fieldset>
+
+                                <div className="mb-5 sm:mb-6">
+                                    <label htmlFor="review-text" className="sr-only">
+                                        Your review
+                                    </label>
+                                    <Textarea
+                                        id="review-text"
+                                        placeholder="Share some feedback..."
+                                        rows={4}
+                                        disabled={isSubmitting}
+                                        className="resize-none text-sm border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-50 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-green-300 dark:focus:border-green-500 focus:ring-green-300 dark:focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        aria-label="Your review"
+                                        aria-required="true"
+                                        aria-invalid={!!errors.review}
+                                        aria-describedby={errors.review ? 'review-error' : undefined}
+                                        {...register('review')}
+                                    />
+                                    {errors.review && (
+                                        <p
+                                            id="review-error"
+                                            className="text-xs text-red-600 dark:text-red-400 mt-2"
+                                            role="alert"
+                                        >
+                                            {errors.review.message}
+                                        </p>
+                                    )}
                                 </div>
-                            </fieldset>
 
-                            <Textarea
-                                placeholder="Share some feedback..."
-                                value={review}
-                                rows={4}
-                                onChange={(e) => setReview(e.target.value)}
-                                className="mb-5 sm:mb-6 resize-none text-sm border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-50 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-green-300 dark:focus:border-green-500 focus:ring-green-300 dark:focus:ring-green-500"
-                                aria-label="Your review"
-                            />
-
-                            <Button
-                                onClick={handleSubmitReview}
-                                disabled={rating === 0 || review.trim() === ''}
-                                className="w-full bg-[#3d2f6e] hover:bg-[#2f2454] dark:bg-[#4a3b82] dark:hover:bg-[#3d2f6e] text-white font-semibold py-5 sm:py-6 rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-[#3d2f6e] dark:focus-visible:ring-[#4a3b82] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800"
-                                aria-label="Submit your review"
-                            >
-                                Submit Review
-                            </Button>
+                                <Button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className="w-full bg-[#3d2f6e] hover:bg-[#2f2454] dark:bg-[#4a3b82] dark:hover:bg-[#3d2f6e] text-white font-semibold py-5 sm:py-6 rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-[#3d2f6e] dark:focus-visible:ring-[#4a3b82] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800"
+                                    aria-label="Submit your review"
+                                >
+                                    {isSubmitting ? (
+                                        <span className="flex items-center justify-center gap-2">
+                      <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
+                      Submitting...
+                    </span>
+                                    ) : (
+                                        'Submit Review'
+                                    )}
+                                </Button>
+                            </form>
                         </div>
 
                         <div className="relative min-h-[300px] md:min-h-0">
