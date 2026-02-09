@@ -111,8 +111,8 @@ function HeroSection() {
                                                 <h3 className="text-white text-sm sm:text-base font-semibold mb-2 sm:mb-3 pl-2 drop-shadow-lg text-center">
                                                     {destination.title}
                                                 </h3>
+                                                <div className="relative h-72 sm:h-80 lg:h-96 w-full overflow-hidden rounded-lg shadow-2xl">
 
-                                                <div className="relative h-64 sm:h-72 md:h-80 lg:h-96 w-full overflow-hidden rounded-lg shadow-2xl">
                                                 <Image
                                                         src={destination.image}
                                                         alt={destination.alt || destination.title}
